@@ -1,0 +1,42 @@
+<p id="notice"><%= notice %></p>
+<h2>Event Page For: <%= @event.title %></h2>
+<ul>
+  <li>
+    <strong>Title:</strong> <%= @event.title %><br />
+    <strong>Location:</strong> <%= @event.location %><br />
+    <strong>Date:</strong> <%= @event.date %><br />
+    <strong>Creator:</strong> <%= link_to @event.creator.name, @event.creator %><br /><br />
+    <strong>Attendees:</strong><br />
+    <% if @event.attendees.empty? %>
+      No one is currently attending!
+    <% else %>
+      <% @event.attendees.each do |attendee| %>
+        <%= link_to attendee.name, attendee %><br />
+      <% end %>
+    <% end %><br />
+    <% if logged_in? %>
+
+      <% if @event.creator.name == current_user.name && @event.date >= Time.zone.now %>
+        <%= link_to "Invite Other Users", invite_path(event_id: @event.id) %><br />
+      <% end %>
+
+      <% if current_user.attended_events.include?(@event) %>
+      You are currently attending this event! If you unattend, you will need to be reinvited by the host to attend.
+        <%= link_to 'Unattend', unattend_path(event_id: @event.id, user_id: current_user.id), method: :delete %>
+      <% elsif current_user.received_invites && @event.date >= Time.zone.now %>
+        <% current_user.received_invites.each do |invite| %>
+          <% if invite.event.title == @event.title %>
+          <%= link_to 'Accept Invite!', attend_path(event_id: @event.id, user_id: current_user.id), method: :post %>
+          <% end %>
+        <% end %>
+      <% elsif @event.date >= Time.zone.now %>
+        You were invited, but missed the event :(
+        <% current_user.received_invites.destroy(invite) %>
+      <% end %>
+      <% else %>
+        <strong>Log in to check if you are invited to this event!</strong>
+    <% end %>
+  </li>
+</ul>
+<%= link_to 'Edit', edit_event_path(@event) %> |
+<%= link_to 'Back', events_path %>

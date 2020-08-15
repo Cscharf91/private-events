@@ -1,0 +1,5 @@
+<p id="notice"><%= notice %></p>
+<h2>You have Notifications:</h2>
+<% current_user.received_invites.each do |invite| %>
+<%= link_to "Invite to: #{invite.event.title}", invite.event %>
+<% end %>

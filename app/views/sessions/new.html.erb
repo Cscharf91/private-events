@@ -1,0 +1,11 @@
+<p id="notice"><%= notice %></p>
+<h1>Log In</h1>
+<%= form_with(url: 'login', method: :post, local: true) do |form| %>
+
+
+  <div class="actions">
+    <%= form.text_field :name %>
+    <%= form.submit :submit %>
+  </div>
+<% end %>
+<%= link_to 'Back', root_path %>

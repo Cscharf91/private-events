@@ -1,0 +1,19 @@
+<p id="notice"><%= notice %></p>
+<% if logged_in? %>
+  <% if current_user.received_invites.any? %>
+    <h3>You have pending invites!</h3>
+     <%= link_to "Notifications", notifications_path %>
+  <% end %>
+<%end %>
+<h1>Events</h1>
+<h4>Upcoming Events</h4>
+<% @events.upcoming_events.each do |event| %>
+  <%= link_to event.title, event %>
+<% end %>
+<h4>Attended Events</h4>
+<% @events.prev_events.each do |event| %>
+  <%= link_to event.title, event %>
+<% end %>
+<br>
+
+<%= link_to 'New Event', new_event_path %>
